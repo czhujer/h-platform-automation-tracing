@@ -3,7 +3,8 @@ services:
 
   agent:
     image: jaegertracing/jaeger-agent:1.18
-    command: ["--reporter.tchannel.host-port=collector:14267"]
+    command: ["--reporter.grpc.host-port=collector:14250"]
+    restart: always
 
   collector:
     image: jaegertracing/jaeger-collector:1.18
@@ -12,6 +13,9 @@ services:
       ES_SERVER_URLS: "http://elasticsearch:9200"
       ES_PASSWORD: "${ES_PASSWORD}"
       ES_USERNAME: "${ES_USERNAME}"
+    depends_on:
+      - "elasticsearch"
+    restart: always
 
   query:
     image: jaegertracing/jaeger-query:1.18
@@ -22,6 +26,9 @@ services:
       ES_USERNAME: "${ES_USERNAME}"
     ports:
       - 8080:16686 # we will use 8080 to access UI
+    depends_on:
+      - "elasticsearch"
+    restart: always
 
   # Elasticsearch Docker Images: https://www.docker.elastic.co/
   elasticsearch:
