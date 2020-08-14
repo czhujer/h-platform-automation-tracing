@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+
+  agent:
+    image: jaegertracing/jaeger-agent:1.18
+    command: ["--reporter.tchannel.host-port=collector:14267"]
+
+  collector:
+    image: jaegertracing/jaeger-collector:1.18
+    environment:
+      SPAN_STORAGE_TYPE: elasticsearch
+      ES_SERVER_URLS: "${ES_SERVER_URLS}"
+      ES_PASSWORD: "${ES_PASSWORD}"
+      ES_USERNAME: "${ES_USERNAME}"
+
+  query:
+    image: jaegertracing/jaeger-query:1.18
+    environment:
+      SPAN_STORAGE_TYPE: elasticsearch
+      ES_SERVER_URLS: "${ES_SERVER_URLS}"
+      ES_PASSWORD: "${ES_PASSWORD}"
+      ES_USERNAME: "${ES_USERNAME}"
+    ports:
+      - 8080:16686 # we will use 8080 to access UI
