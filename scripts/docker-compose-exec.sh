@@ -19,7 +19,7 @@ WorkingDirectory=/etc/docker/compose/%i
 # Remove old containers, images and volumes
 ExecStartPre=/usr/bin/docker-compose down -v
 ExecStartPre=/usr/bin/docker-compose rm -fv
-#ExecStartPre=-/bin/bash -c 'docker volume ls -qf "name=%i_" | xargs docker volume rm'
+ExecStartPre=-/bin/bash -c 'docker volume ls -qf "name=%i_" | xargs docker volume rm'
 #ExecStartPre=-/bin/bash -c 'docker network ls -qf "name=%i_" | xargs docker network rm'
 ExecStartPre=-/bin/bash -c 'docker ps -aqf "name=%i_*" | xargs docker rm'
 
