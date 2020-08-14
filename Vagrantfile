@@ -26,28 +26,19 @@ Vagrant.configure(2) do |config|
       path: File.join(dir_tracing,'scripts/docker-compose-exec.sh'),
       :privileged => true
 
-  #  config.vm.provision "bootstrap-wordpress",
-  #    type: "shell",
-  #    path: File.join(dir,'scripts/bootstrap-wordpress.sh'),
-  #    :privileged => true
-  #
-  #  config.vm.provision "bootstrap-wordpress-plugins",
-  #    type: "shell",
-  #    path: File.join(dir,'scripts/bootstrap-wordpress-plugins.sh'),
-  #    :privileged => true
-
 $script_status = <<SCRIPT3
 echo "Showing status of tracing-stack compose..."
+sleep 60
 cd /etc/docker/compose/tracing-stack && docker-compose ps
 SCRIPT3
 
     config_tracing.vm.provision "status", type: "shell", inline: $script_status, privileged: false
 
     # Expose http/s port
-    config_tracing.vm.network "forwarded_port", guest: 8081, host: 8080, auto_correct: true
+    config_tracing.vm.network "forwarded_port", guest: 8080, host: 8081, auto_correct: true
 
     config_tracing.vm.provider :libvirt do |v|
-      v.memory = 1024
+      v.memory = 2048
       v.cpus = 2
     end
   end
