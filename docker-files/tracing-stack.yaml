@@ -3,32 +3,35 @@ services:
 
   agent:
     image: jaegertracing/jaeger-agent:1.18
-    command: ["--reporter.grpc.host-port=collector:14250"]
     restart: always
+    command: ["--reporter.grpc.host-port=collector:14250"]
+    ports:
+      - 6831:6831
+      - 6832:6832
 
   collector:
     image: jaegertracing/jaeger-collector:1.18
-    environment:
-      SPAN_STORAGE_TYPE: elasticsearch
-      ES_SERVER_URLS: "http://elasticsearch:9200"
-      ES_PASSWORD: "${ES_PASSWORD}"
-      ES_USERNAME: "${ES_USERNAME}"
-    depends_on:
-      - "elasticsearch"
     restart: always
-
-  query:
-    image: jaegertracing/jaeger-query:1.18
     environment:
       SPAN_STORAGE_TYPE: elasticsearch
       ES_SERVER_URLS: "http://elasticsearch:9200"
       ES_PASSWORD: "${ES_PASSWORD}"
       ES_USERNAME: "${ES_USERNAME}"
     ports:
-      - 8080:16686 # we will use 8080 to access UI
+      - 14250:14250
     depends_on:
       - "elasticsearch"
+
+  query:
+    image: jaegertracing/jaeger-query:1.18
     restart: always
+    environment:
+      SPAN_STORAGE_TYPE: elasticsearch
+      ES_SERVER_URLS: "http://elasticsearch:9200"
+    ports:
+      - 8080:16686
+    depends_on:
+      - "elasticsearch"
 
   # Elasticsearch Docker Images: https://www.docker.elastic.co/
   elasticsearch:
