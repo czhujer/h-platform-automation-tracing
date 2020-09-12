@@ -5,7 +5,7 @@
 
 Vagrant.configure(2) do |config|
   config.vm.define :"tracing-stack" do |config_tracing|
-    config_tracing.vm.box = "peru/ubuntu-20.04-server-amd64"
+    config_tracing.vm.box = "generic/ubuntu2004"
     config_tracing.vm.hostname = "tracing-stack"
     config_tracing.vm.define "tracing-stack"
 
